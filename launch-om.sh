@@ -37,7 +37,6 @@ BASEURL='https://repo.mongodb.com/yum/amazon/2023/mongodb-enterprise/7.0/\$basea
 
 ssh -i $KEYPATH -oStrictHostKeyChecking=no ec2-user@$PUBDNS <<EOF
 
-sudo dnf upgrade -y --releasever=2023.2.20231030
 sudo yum install -y $OM_VERSION
 
 sudo tee -a /etc/yum.repos.d/mongodb-enterprise-7.0.repo <<-RPM_FILE
