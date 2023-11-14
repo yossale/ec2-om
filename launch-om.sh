@@ -32,20 +32,20 @@ do
   nc -z $PUBDNS 22
 done
 
-BASEURL='https://repo.mongodb.com/yum/amazon/2023/mongodb-enterprise/7.0/\$basearch/'
+BASEURL='https://repo.mongodb.com/yum/amazon/2/mongodb-enterprise/6.0/\$basearch/'
 # install mongo, shell, and OM rpms
 
 ssh -i $KEYPATH -oStrictHostKeyChecking=no ec2-user@$PUBDNS <<EOF
 
 sudo yum install -y $OM_VERSION
 
-sudo tee -a /etc/yum.repos.d/mongodb-enterprise-7.0.repo <<-RPM_FILE
-[mongodb-enterprise-7.0]
+sudo tee -a /etc/yum.repos.d/mongodb-enterprise-6.0.repo <<-RPM_FILE
+[mongodb-enterprise-6.0]
 name=MongoDB Enterprise Repository
 baseurl=$BASEURL
 gpgcheck=1
 enabled=1
-gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc
+gpgkey=https://www.mongodb.org/static/pgp/server-6.0.asc
 RPM_FILE
 sudo yum install -y mongodb-enterprise
 sudo systemctl start mongod

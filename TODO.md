@@ -100,3 +100,9 @@ add `sudo dnf upgrade -y --releasever=2023.2.20231030` to script
 But 
 - its long so consider if it's really crucial
 - Think of making it use an automatic version
+
+
+### I'm trying to install version 6, with rpm. 
+But it doesn't support Amazon Linux 2023, so I'm going to use amazong linux 2
+`"ami-0b9fd8b55a6e3c9d5"` => this was my previous AMI (2023)
+`ami-0a1f6cc8163bdcc75` => this is Linux 2
