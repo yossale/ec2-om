@@ -1,2 +1,6 @@
-My IP is 147.235.200.73
-API key is jdrdnwmn:fb2640d1-386d-4a40-9ee6-3e49257d8ca8
+echo '[mongodb-enterprise-7.0]
+name=MongoDB Enterprise Repository
+baseurl=https://repo.mongodb.com/yum/amazon/2023/mongodb-enterprise/7.0/$basearch/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc' | tee -a test.repo

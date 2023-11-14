@@ -32,11 +32,25 @@ do
   nc -z $PUBDNS 22
 done
 
+BASEURL='https://repo.mongodb.com/yum/amazon/2023/mongodb-enterprise/7.0/\$basearch/'
 # install mongo, shell, and OM rpms
+
 ssh -i $KEYPATH -oStrictHostKeyChecking=no ec2-user@$PUBDNS <<EOF
+
+sudo dnf upgrade -y --releasever=2023.2.20231030
 sudo yum install -y $OM_VERSION
-sudo yum install -y https://repo.mongodb.org/yum/amazon/2/mongodb-org/6.0/x86_64/RPMS/mongodb-org-server-6.0.1-1.amzn2.x86_64.rpm
+
+sudo tee -a /etc/yum.repos.d/mongodb-enterprise-7.0.repo <<-RPM_FILE
+[mongodb-enterprise-7.0]
+name=MongoDB Enterprise Repository
+baseurl=$BASEURL
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-7.0.asc
+RPM_FILE
+sudo yum install -y mongodb-enterprise
 sudo systemctl start mongod
+
 sudo tee -a /opt/mongodb/mms/conf/conf-mms.properties <<-CONF_FILE
 mms.ignoreInitialUiSetup=true
 mms.centralUrl=http://$PUBDNS:8080
@@ -50,11 +64,16 @@ mms.mail.hostname=localhost
 mms.mail.port=25
 mms.user.invitationOnly=true
 CONF_FILE
-sudo systemctl start mongodb-mms
+
 sudo mkdir /snapshots
 sudo chown mongodb-mms:mongodb-mms /snapshots
 sudo mkdir /heads
 sudo chown mongodb-mms:mongodb-mms /heads
+
+sudo systemctl status mongod
+sudo systemctl start mongodb-mms
+sudo systemctl status mongodb-mms
+
 EOF
 
 if [ $? -eq 0 ]; then
@@ -64,12 +83,12 @@ else
   exit 1
 fi
 
-sleep 1
+sleep 5
 nc -z $PUBDNS 8080
 until test $? -eq 0
 do
   echo "Waiting"
-  sleep 1
+  sleep 5
   nc -z $PUBDNS 8080
 done
 
